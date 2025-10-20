@@ -2,13 +2,21 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Calendar } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
 
   const scrollToSection = (id: string) => {
+    if (!isHome) {
+      window.location.href = `/#${id}`
+      return
+    }
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
@@ -21,7 +29,14 @@ export function Header() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/images/blades-logo.png" alt="Blades Barbers" width={50} height={50} className="rounded-full" />
+            <Image 
+              src="/images/blades-logo.png" 
+              alt="Blades Barbers" 
+              width={50} 
+              height={50} 
+              className="rounded-full"
+              style={{ height: 'auto' }}
+            />
             <div className="text-xl md:text-2xl font-bold text-primary-foreground tracking-tight">
               BLADES <span className="text-accent">BARBERS</span>
             </div>
@@ -47,6 +62,13 @@ export function Header() {
             >
               Galería
             </button>
+            <Link
+              href="/mis-reservas"
+              className="text-primary-foreground hover:text-accent transition-colors text-sm font-medium flex items-center gap-1"
+            >
+              <Calendar className="w-4 h-4" />
+              Mis Reservas
+            </Link>
             <button
               onClick={() => scrollToSection("reservas")}
               className="text-primary-foreground hover:text-accent transition-colors text-sm font-medium"
@@ -96,6 +118,14 @@ export function Header() {
             >
               Galería
             </button>
+            <Link
+              href="/mis-reservas"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-primary-foreground hover:text-accent transition-colors text-sm font-medium text-left flex items-center gap-2"
+            >
+              <Calendar className="w-4 h-4" />
+              Mis Reservas
+            </Link>
             <button
               onClick={() => scrollToSection("reservas")}
               className="text-primary-foreground hover:text-accent transition-colors text-sm font-medium text-left"

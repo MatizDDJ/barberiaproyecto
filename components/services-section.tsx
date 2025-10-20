@@ -36,7 +36,7 @@ export function ServicesSection() {
   const { ref: cardsRef, isInView: cardsInView } = useInView({ threshold: 0.1 })
 
   return (
-    <section id="servicios" className="py-20 md:py-32 bg-background">
+    <section id="servicios" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
         <div 
           ref={titleRef}

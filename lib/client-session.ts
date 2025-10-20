@@ -99,6 +99,26 @@ export function updateLocalBookingStatus(
   localStorage.setItem(BOOKINGS_KEY, JSON.stringify(updated))
 }
 
+// Cancelar una reserva (actualiza Firebase y localStorage)
+export async function cancelClientBooking(bookingId: string): Promise<void> {
+  const { updateDoc, doc } = await import("firebase/firestore")
+  const { db } = await import("./firebase")
+
+  if (!db) {
+    throw new Error("Firebase no está configurado")
+  }
+
+  // Actualizar en Firebase
+  const bookingRef = doc(db, "reservas", bookingId)
+  await updateDoc(bookingRef, {
+    estado: "cancelado",
+    canceladoAt: new Date().toISOString(),
+  })
+
+  // Actualizar en localStorage
+  updateLocalBookingStatus(bookingId, "cancelado")
+}
+
 // Limpiar reservas antiguas (más de 30 días)
 export function cleanOldBookings() {
   const bookings = getClientBookings()
