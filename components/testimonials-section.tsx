@@ -1,5 +1,8 @@
+"use client"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Star } from "lucide-react"
+import { useInView } from "@/hooks/use-in-view"
 
 const testimonials = [
   {
@@ -23,10 +26,16 @@ const testimonials = [
 ]
 
 export function TestimonialsSection() {
+  const { ref: titleRef, isInView: titleInView } = useInView({ threshold: 0.3 })
+  const { ref: cardsRef, isInView: cardsInView } = useInView({ threshold: 0.1 })
+
   return (
     <section className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div 
+          ref={titleRef}
+          className={`text-center mb-16 animate-on-scroll ${titleInView ? 'animate-fade-in' : ''}`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
             Lo que dicen nuestros clientes
           </h2>
@@ -35,9 +44,15 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-border">
+            <Card 
+              key={index} 
+              className={`border-border hover:shadow-lg transition-shadow animate-on-scroll ${
+                cardsInView ? 'animate-slide-up' : ''
+              }`}
+              style={{ animationDelay: cardsInView ? `${index * 150}ms` : '0ms' }}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4 mb-4">
                   <img
