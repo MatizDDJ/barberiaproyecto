@@ -1,33 +1,39 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Scissors, Sparkles, Users, Droplets } from "lucide-react"
+import { Scissors, Sparkles, Palette, Zap, Star } from "lucide-react"
 import { useInView } from "@/hooks/use-in-view"
 
 const services = [
   {
     icon: Scissors,
-    title: "Corte Clásico",
-    description: "Cortes tradicionales y modernos adaptados a tu estilo personal",
-    price: "Desde $800",
+    title: "Corte Completo",
+    description: "Incluye barba y cejas para un look impecable",
+    price: "$380",
+  },
+  {
+    icon: Zap,
+    title: "Solo Peine",
+    description: "Corte rápido y profesional",
+    price: "$250",
   },
   {
     icon: Sparkles,
-    title: "Afeitado con Navaja",
-    description: "Afeitado tradicional con toalla caliente y productos premium",
-    price: "Desde $600",
+    title: "Estética de Barba",
+    description: "Perfilado y diseño profesional de barba",
+    price: "$200",
   },
   {
-    icon: Users,
-    title: "Diseño de Barba",
-    description: "Perfilado y diseño profesional para una barba impecable",
-    price: "Desde $500",
+    icon: Palette,
+    title: "Mechas",
+    description: "Mechas profesionales para destacar tu estilo",
+    price: "$1.100",
   },
   {
-    icon: Droplets,
-    title: "Tratamientos Capilares",
-    description: "Tratamientos especializados para el cuidado del cabello",
-    price: "Desde $700",
+    icon: Star,
+    title: "Global",
+    description: "Servicio completo premium con todos los extras",
+    price: "$1.800",
   },
 ]
 
@@ -48,7 +54,7 @@ export function ServicesSection() {
           </p>
         </div>
 
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {services.map((service, index) => (
             <Card
               key={index}

@@ -5,28 +5,28 @@ import { useInView } from "@/hooks/use-in-view"
 
 const galleryImages = [
   {
-    src: "/modern-fade-haircut-barbershop.jpg",
-    alt: "Corte fade moderno",
+    src: "/images/corte3.webp",
+    alt: "Diseño de barba profesional",
   },
   {
-    src: "/classic-pompadour-hairstyle-barbershop.jpg",
-    alt: "Pompadour clásico",
+    src: "/images/corte1.webp",
+    alt: "Corte profesional Blades Barbers",
   },
   {
-    src: "/beard-trim-grooming-barbershop.jpg",
-    alt: "Diseño de barba",
+    src: "/images/corte2.webp",
+    alt: "Estilo moderno y elegante",
   },
   {
-    src: "/undercut-hairstyle-barbershop.jpg",
-    alt: "Undercut profesional",
+    src: "/images/corte4.webp",
+    alt: "Corte fade degradado",
   },
   {
-    src: "/traditional-straight-razor-shave-barbershop.jpg",
-    alt: "Afeitado con navaja",
+    src: "/images/corte5.webp",
+    alt: "Look premium",
   },
   {
-    src: "/textured-crop-haircut-barbershop.jpg",
-    alt: "Crop texturizado",
+    src: "/images/corte6.webp",
+    alt: "Estilo personalizado",
   },
 ]
 
@@ -46,31 +46,34 @@ export function GallerySection() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-balance">Cada corte es una obra de arte</p>
         </div>
 
-        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {galleryImages.map((image, index) => (
-            <div
-              key={index}
-              className={`relative aspect-square overflow-hidden rounded-lg cursor-pointer animate-on-scroll ${
-                gridInView ? 'animate-scale-in' : ''
-              }`}
-              style={{ animationDelay: gridInView ? `${index * 80}ms` : '0ms' }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <img
-                src={image.src || "/placeholder.svg"}
-                alt={image.alt}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              />
+        <div className="max-w-5xl mx-auto">
+          <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-6">
+            {galleryImages.map((image, index) => (
               <div
-                className={`absolute inset-0 bg-primary/80 flex items-center justify-center transition-opacity duration-300 ${
-                  hoveredIndex === index ? "opacity-100" : "opacity-0"
+                key={index}
+                className={`relative aspect-square overflow-hidden rounded-lg cursor-pointer animate-on-scroll ${
+                  gridInView ? 'animate-scale-in' : ''
                 }`}
+                style={{ animationDelay: gridInView ? `${index * 80}ms` : '0ms' }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <p className="text-primary-foreground font-semibold text-lg px-4 text-center">{image.alt}</p>
+                <img
+                  src={image.src || "/placeholder.svg"}
+                  alt={image.alt}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  style={{ objectPosition: 'center 30%' }}
+                />
+                <div
+                  className={`absolute inset-0 bg-primary/80 flex items-center justify-center transition-opacity duration-300 ${
+                    hoveredIndex === index ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <p className="text-primary-foreground font-semibold text-lg px-4 text-center">{image.alt}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

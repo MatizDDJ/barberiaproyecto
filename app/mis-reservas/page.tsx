@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { getClientBookings, cancelClientBooking, type ClientBookingWithId } from "@/lib/client-session"
-import { Calendar, Clock, Scissors, User, Phone, CalendarPlus, AlertCircle, X } from "lucide-react"
+import { Calendar, Clock, Scissors, User, Phone, CalendarPlus, AlertCircle, X, MapPin } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export default function MisReservasPage() {
@@ -78,12 +78,21 @@ export default function MisReservasPage() {
 
   const getServicioLabel = (value: string) => {
     const servicios: Record<string, string> = {
-      "corte-clasico": "Corte clásico",
-      "afeitado-navaja": "Afeitado con navaja",
-      "diseno-barba": "Diseño de barba",
-      "tratamiento-capilar": "Tratamiento capilar",
+      "corte-completo": "Corte (incluye barba y cejas)",
+      "solo-peine": "Solo peine",
+      "estetica-barba": "Estética de barba",
+      "mechas": "Mechas",
+      "global": "Global",
     }
     return servicios[value] || value
+  }
+
+  const getSucursalLabel = (value: string) => {
+    const sucursales: Record<string, string> = {
+      "centro": "Centro - Mangarelli 585",
+      "real": "El Real - Roger Balet 201",
+    }
+    return sucursales[value] || value
   }
 
   const formatFecha = (fecha: string) => {
@@ -188,9 +197,16 @@ export default function MisReservasPage() {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                   <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MapPin className="w-4 h-4" />
+                                    <span className="font-medium text-foreground">{getSucursalLabel(booking.sucursal)}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-muted-foreground">
                                     <User className="w-4 h-4" />
                                     <span>{booking.nombre}</span>
                                   </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                   <div className="flex items-center gap-2 text-muted-foreground">
                                     <Phone className="w-4 h-4" />
                                     <span>{booking.telefono}</span>
@@ -299,6 +315,13 @@ export default function MisReservasPage() {
                                     <span>{booking.hora}</span>
                                   </div>
                                 </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4" />
+                                    <span>{getSucursalLabel(booking.sucursal)}</span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </CardContent>
@@ -316,7 +339,7 @@ export default function MisReservasPage() {
                         💡 <strong>Tip:</strong> Llegá 5 minutos antes de tu turno
                       </p>
                       <p>
-                        Podés cancelar tu turno desde esta página. Para reprogramar, contactanos al <strong>099 123 456</strong>
+                        Podés cancelar tu turno desde esta página. Para reprogramar, contactanos al <strong>099 220 239</strong>
                       </p>
                     </div>
                   </CardContent>

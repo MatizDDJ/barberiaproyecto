@@ -16,10 +16,11 @@ import { toast } from "sonner"
 import { LogOut, Calendar, Filter } from "lucide-react"
 
 const SERVICE_LABELS: Record<string, string> = {
-  "corte-clasico": "Corte clásico",
-  "afeitado-navaja": "Afeitado con navaja",
-  "diseno-barba": "Diseño de barba",
-  "tratamiento-capilar": "Tratamiento capilar",
+  "corte-completo": "Corte (incluye barba y cejas)",
+  "solo-peine": "Solo peine",
+  "estetica-barba": "Estética de barba",
+  "mechas": "Mechas",
+  "global": "Global",
 }
 
 export function AdminDashboard() {
@@ -73,6 +74,11 @@ export function AdminDashboard() {
   }
 
   const handleLogout = async () => {
+    if (!auth) {
+      toast.error("Error: Firebase no está configurado")
+      return
+    }
+    
     try {
       await signOut(auth)
       toast.success("Sesión cerrada")
@@ -226,6 +232,7 @@ export function AdminDashboard() {
                     <TableRow>
                       <TableHead>Fecha</TableHead>
                       <TableHead>Hora</TableHead>
+                      <TableHead>Sucursal</TableHead>
                       <TableHead>Cliente</TableHead>
                       <TableHead>Teléfono</TableHead>
                       <TableHead>Servicio</TableHead>
@@ -238,6 +245,11 @@ export function AdminDashboard() {
                       <TableRow key={booking.id}>
                         <TableCell className="font-medium">{booking.fecha}</TableCell>
                         <TableCell>{booking.hora}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="whitespace-nowrap">
+                            {booking.sucursal === "centro" ? "Centro" : "El Real"}
+                          </Badge>
+                        </TableCell>
                         <TableCell>{booking.nombre}</TableCell>
                         <TableCell>{booking.telefono}</TableCell>
                         <TableCell>{SERVICE_LABELS[booking.servicio] || booking.servicio}</TableCell>

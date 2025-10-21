@@ -56,6 +56,22 @@ function SelectContent({
   position = 'popper',
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  
+  // Efecto para prevenir el bloqueo de scroll
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      body[data-scroll-locked] {
+        overflow: auto !important;
+        padding-right: 0 !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
@@ -67,6 +83,7 @@ function SelectContent({
           className,
         )}
         position={position}
+        onCloseAutoFocus={(e) => e.preventDefault()}
         {...props}
       >
         <SelectScrollUpButton />

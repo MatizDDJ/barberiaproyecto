@@ -17,6 +17,7 @@ export interface Booking {
   nombre: string
   telefono: string
   servicio: string
+  sucursal: string
   fecha: string
   hora: string
   estado: "pendiente" | "confirmado" | "cancelado" | "completado"
@@ -28,7 +29,7 @@ const mockBookings: Booking[] = []
 // Create a new booking
 export async function createBooking(booking: Omit<Booking, "id" | "createdAt">) {
   if (!isFirebaseConfigured || !db) {
-    const isAvailable = await checkAvailability(booking.fecha, booking.hora)
+    const isAvailable = await checkAvailability(booking.fecha, booking.hora, booking.sucursal)
     if (!isAvailable) {
       throw new Error("Este horario ya está reservado")
     }
@@ -43,7 +44,7 @@ export async function createBooking(booking: Omit<Booking, "id" | "createdAt">) 
   }
 
   try {
-    const isAvailable = await checkAvailability(booking.fecha, booking.hora)
+    const isAvailable = await checkAvailability(booking.fecha, booking.hora, booking.sucursal)
     if (!isAvailable) {
       throw new Error("Este horario ya está reservado")
     }
@@ -60,10 +61,10 @@ export async function createBooking(booking: Omit<Booking, "id" | "createdAt">) 
 }
 
 // Check if a time slot is available
-export async function checkAvailability(fecha: string, hora: string): Promise<boolean> {
+export async function checkAvailability(fecha: string, hora: string, sucursal: string): Promise<boolean> {
   if (!isFirebaseConfigured || !db) {
     const bookedSlots = mockBookings.filter(
-      (b) => b.fecha === fecha && b.hora === hora && ["pendiente", "confirmado"].includes(b.estado),
+      (b) => b.fecha === fecha && b.hora === hora && b.sucursal === sucursal && ["pendiente", "confirmado"].includes(b.estado),
     )
     return bookedSlots.length === 0
   }
@@ -72,6 +73,7 @@ export async function checkAvailability(fecha: string, hora: string): Promise<bo
     collection(db, "reservas"),
     where("fecha", "==", fecha),
     where("hora", "==", hora),
+    where("sucursal", "==", sucursal),
     where("estado", "in", ["pendiente", "confirmado"]),
   )
 
@@ -79,13 +81,13 @@ export async function checkAvailability(fecha: string, hora: string): Promise<bo
   return querySnapshot.empty
 }
 
-// Get available time slots for a specific date
-export async function getAvailableSlots(fecha: string): Promise<string[]> {
+// Get available time slots for a specific date and sucursal
+export async function getAvailableSlots(fecha: string, sucursal: string): Promise<string[]> {
   const allSlots = generateTimeSlots()
 
   if (!isFirebaseConfigured || !db) {
     const bookedSlots = mockBookings
-      .filter((b) => b.fecha === fecha && ["pendiente", "confirmado"].includes(b.estado))
+      .filter((b) => b.fecha === fecha && b.sucursal === sucursal && ["pendiente", "confirmado"].includes(b.estado))
       .map((b) => b.hora)
     return allSlots.filter((slot) => !bookedSlots.includes(slot))
   }
@@ -93,6 +95,7 @@ export async function getAvailableSlots(fecha: string): Promise<string[]> {
   const q = query(
     collection(db, "reservas"),
     where("fecha", "==", fecha),
+    where("sucursal", "==", sucursal),
     where("estado", "in", ["pendiente", "confirmado"]),
   )
 

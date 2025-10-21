@@ -11,24 +11,32 @@ export function Footer() {
               BLADES <span className="text-accent">BARBERS</span>
             </h3>
             <p className="text-primary-foreground/80 leading-relaxed">
-              Tu barbería de confianza en Montevideo. Estilo, calidad y profesionalismo en cada corte.
+              Tu barbería de confianza en Colonia del Sacramento. Estilo, calidad y profesionalismo en cada corte.
             </p>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Información</h4>
-            <div className="space-y-3">
+            <h4 className="text-lg font-semibold mb-4">Nuestras Sucursales</h4>
+            <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
-                <p className="text-primary-foreground/80">
-                  Av. 18 de Julio 1234
-                  <br />
-                  Montevideo, Uruguay
-                </p>
+                <MapPin className="w-5 h-5 text-accent mt-1 shrink-0" />
+                <div className="text-primary-foreground/80">
+                  <p className="font-semibold text-accent">Centro</p>
+                  <p>Mangarelli 585</p>
+                  <p>Colonia del Sacramento, Uruguay</p>
+                </div>
               </div>
               <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
+                <MapPin className="w-5 h-5 text-accent mt-1 shrink-0" />
+                <div className="text-primary-foreground/80">
+                  <p className="font-semibold text-accent">El Real</p>
+                  <p>Roger Balet 201</p>
+                  <p>Colonia del Sacramento, Uruguay</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Clock className="w-5 h-5 text-accent mt-1 shrink-0" />
                 <div className="text-primary-foreground/80">
                   <p>Lunes a Viernes: 9:00 - 20:00</p>
                   <p>Sábados: 9:00 - 18:00</p>
@@ -43,7 +51,7 @@ export function Footer() {
             <h4 className="text-lg font-semibold mb-4">Seguinos</h4>
             <div className="flex gap-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/_blades.barbers/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-primary-foreground/10 hover:bg-accent/20 rounded-lg flex items-center justify-center transition-colors"
@@ -59,7 +67,7 @@ export function Footer() {
                 <Facebook className="w-6 h-6 text-primary-foreground" />
               </a>
               <a
-                href="https://wa.me/59899123456"
+                href="https://wa.me/59899220239"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-12 h-12 bg-primary-foreground/10 hover:bg-accent/20 rounded-lg flex items-center justify-center transition-colors"

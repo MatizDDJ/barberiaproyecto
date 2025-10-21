@@ -242,3 +242,22 @@ html {
 a, button {
   transition: all 0.2s ease-in-out;
 }
+
+/* Fix crítico: Prevenir que Radix UI bloquee el scroll y mueva el contenido */
+body {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+}
+
+/* Asegurar que el body no cambie cuando se abren modales/selects */
+body[data-scroll-locked] {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+}
+
+/* Prevenir layout shift en el header y contenido principal */
+html {
+  overflow-y: scroll;
+  width: 100vw;
+}
+

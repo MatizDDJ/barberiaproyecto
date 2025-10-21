@@ -13,6 +13,7 @@ export interface ClientBookingWithId {
   nombre: string
   telefono: string
   servicio: string
+  sucursal: string
   fecha: string
   hora: string
   estado: "pendiente" | "confirmado" | "cancelado" | "completado"

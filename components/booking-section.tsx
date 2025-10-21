@@ -14,10 +14,16 @@ import { Clock, CheckCircle2, XCircle } from "lucide-react"
 import { useInView } from "@/hooks/use-in-view"
 
 const SERVICES = [
-  { value: "corte-clasico", label: "Corte clásico", duracion: "30 min" },
-  { value: "afeitado-navaja", label: "Afeitado con navaja", duracion: "45 min" },
-  { value: "diseno-barba", label: "Diseño de barba", duracion: "30 min" },
-  { value: "tratamiento-capilar", label: "Tratamiento capilar", duracion: "60 min" },
+  { value: "corte-completo", label: "Corte (incluye barba y cejas)", precio: "$380", duracion: "45 min" },
+  { value: "solo-peine", label: "Solo peine", precio: "$250", duracion: "30 min" },
+  { value: "estetica-barba", label: "Estética de barba", precio: "$200", duracion: "30 min" },
+  { value: "mechas", label: "Mechas", precio: "$1.100", duracion: "90 min" },
+  { value: "global", label: "Global", precio: "$1.800", duracion: "120 min" },
+]
+
+const SUCURSALES = [
+  { value: "centro", label: "Centro - Mangarelli 585", direccion: "Mangarelli 585" },
+  { value: "real", label: "El Real - Roger Balet 201", direccion: "Roger Balet 201" },
 ]
 
 // Generar todos los horarios del día (10:00 - 20:00)
@@ -33,6 +39,7 @@ export function BookingSection() {
     nombre: "",
     telefono: "",
     servicio: "",
+    sucursal: "",
     fecha: "",
     hora: "",
   })
@@ -56,18 +63,18 @@ export function BookingSection() {
   }, [])
 
   useEffect(() => {
-    if (formData.fecha) {
-      loadAvailableSlots(formData.fecha)
+    if (formData.fecha && formData.sucursal) {
+      loadAvailableSlots(formData.fecha, formData.sucursal)
     } else {
       setAvailableSlots([])
       setAllSlots([])
     }
-  }, [formData.fecha])
+  }, [formData.fecha, formData.sucursal])
 
-  const loadAvailableSlots = async (fecha: string) => {
+  const loadAvailableSlots = async (fecha: string, sucursal: string) => {
     setLoadingSlots(true)
     try {
-      const slots = await getAvailableSlots(fecha)
+      const slots = await getAvailableSlots(fecha, sucursal)
       setAvailableSlots(slots)
       
       // Crear array con todos los horarios y su disponibilidad
@@ -93,7 +100,7 @@ export function BookingSection() {
     e.preventDefault()
 
     // Validate all fields
-    if (!formData.nombre || !formData.telefono || !formData.servicio || !formData.fecha || !formData.hora) {
+    if (!formData.nombre || !formData.telefono || !formData.sucursal || !formData.servicio || !formData.fecha || !formData.hora) {
       toast.error("Por favor completá todos los campos")
       return
     }
@@ -105,6 +112,7 @@ export function BookingSection() {
       const result = await createBooking({
         nombre: formData.nombre,
         telefono: formData.telefono,
+        sucursal: formData.sucursal,
         servicio: formData.servicio,
         fecha: formData.fecha,
         hora: formData.hora,
@@ -117,6 +125,7 @@ export function BookingSection() {
         nombre: formData.nombre,
         telefono: formData.telefono,
         servicio: formData.servicio,
+        sucursal: formData.sucursal,
         fecha: formData.fecha,
         hora: formData.hora,
         estado: "pendiente",
@@ -215,6 +224,27 @@ export function BookingSection() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="sucursal">Sucursal</Label>
+                    <Select
+                      value={formData.sucursal}
+                      onValueChange={(value) => setFormData({ ...formData, sucursal: value })}
+                      disabled={loading}
+                      required
+                    >
+                      <SelectTrigger id="sucursal">
+                        <SelectValue placeholder="Seleccioná una sucursal" />
+                      </SelectTrigger>
+                      <SelectContent position="popper" sideOffset={5}>
+                        {SUCURSALES.map((sucursal) => (
+                          <SelectItem key={sucursal.value} value={sucursal.value}>
+                            {sucursal.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="servicio">Servicio</Label>
                     <Select
                       value={formData.servicio}
@@ -225,12 +255,15 @@ export function BookingSection() {
                       <SelectTrigger id="servicio">
                         <SelectValue placeholder="Seleccioná un servicio" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent position="popper" sideOffset={5}>
                         {SERVICES.map((service) => (
                           <SelectItem key={service.value} value={service.value}>
-                            <div className="flex items-center justify-between w-full">
-                              <span>{service.label}</span>
-                              <span className="text-xs text-muted-foreground ml-2">({service.duracion})</span>
+                            <div className="flex items-center justify-between gap-4 w-full">
+                              <span className="flex-1">{service.label}</span>
+                              <div className="flex items-center gap-2 text-xs">
+                                <span className="font-semibold text-accent">{service.precio}</span>
+                                <span className="text-muted-foreground">• {service.duracion}</span>
+                              </div>
                             </div>
                           </SelectItem>
                         ))}
@@ -253,7 +286,7 @@ export function BookingSection() {
                   </div>
 
                   {/* Visual time slot selector */}
-                  {formData.fecha && (
+                  {formData.fecha && formData.sucursal && (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <Label className="text-base">Horarios disponibles</Label>
