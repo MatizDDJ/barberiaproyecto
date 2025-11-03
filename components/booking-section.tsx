@@ -26,14 +26,6 @@ const SUCURSALES = [
   { value: "real", label: "El Real - Roger Balet 201", direccion: "Roger Balet 201" },
 ]
 
-// Generar todos los horarios del día (10:00 - 20:00)
-const ALL_TIME_SLOTS = [
-  "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
-  "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
-  "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
-  "19:00", "19:30", "20:00"
-]
-
 export function BookingSection() {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -74,13 +66,14 @@ export function BookingSection() {
   const loadAvailableSlots = async (fecha: string, sucursal: string) => {
     setLoadingSlots(true)
     try {
+      // getAvailableSlots ahora maneja todo internamente (horarios del negocio + disponibilidad)
       const slots = await getAvailableSlots(fecha, sucursal)
       setAvailableSlots(slots)
       
       // Crear array con todos los horarios y su disponibilidad
-      const slotsWithStatus = ALL_TIME_SLOTS.map(time => ({
+      const slotsWithStatus = slots.map((time: string) => ({
         time,
-        available: slots.includes(time)
+        available: true
       }))
       setAllSlots(slotsWithStatus)
       

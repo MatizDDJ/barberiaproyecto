@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react"
 import { Instagram, Facebook, MessageCircle, MapPin, Clock } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { getBusinessHours, formatBusinessHours, type BusinessHours } from "@/lib/business-hours"
 
 export function Footer() {
   const router = useRouter()
   const [clickCount, setClickCount] = useState(0)
   const [clickTimer, setClickTimer] = useState<NodeJS.Timeout | null>(null)
+  const [scheduleText, setScheduleText] = useState("Cargando horarios...")
 
   useEffect(() => {
     if (clickCount >= 5) {
@@ -16,6 +18,20 @@ export function Footer() {
       setClickCount(0)
     }
   }, [clickCount, router])
+
+  useEffect(() => {
+    const loadSchedule = async () => {
+      try {
+        const hours = await getBusinessHours()
+        const formatted = formatBusinessHours(hours)
+        setScheduleText(formatted)
+      } catch (error) {
+        console.error("Error loading business hours:", error)
+        setScheduleText("Lunes a Viernes: 9:00 - 20:00 | Sábados: 9:00 - 18:00")
+      }
+    }
+    loadSchedule()
+  }, [])
 
   const handleLogoClick = () => {
     setClickCount(prev => prev + 1)
@@ -71,10 +87,8 @@ export function Footer() {
               </div>
               <div className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-accent mt-1 shrink-0" />
-                <div className="text-primary-foreground/80">
-                  <p>Lunes a Viernes: 9:00 - 20:00</p>
-                  <p>Sábados: 9:00 - 18:00</p>
-                  <p>Domingos: Cerrado</p>
+                <div className="text-primary-foreground/80 whitespace-pre-line">
+                  {scheduleText}
                 </div>
               </div>
             </div>

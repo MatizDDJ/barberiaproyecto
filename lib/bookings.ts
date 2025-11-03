@@ -11,6 +11,7 @@ import {
   Timestamp,
 } from "firebase/firestore"
 import { db, isFirebaseConfigured } from "./firebase"
+import { getBusinessHours } from "./business-hours"
 
 export interface Booking {
   id?: string
@@ -83,7 +84,23 @@ export async function checkAvailability(fecha: string, hora: string, sucursal: s
 
 // Get available time slots for a specific date and sucursal
 export async function getAvailableSlots(fecha: string, sucursal: string): Promise<string[]> {
-  const allSlots = generateTimeSlots()
+  // Obtener horarios configurados para ese día específico
+  const selectedDate = new Date(fecha + "T12:00:00")
+  const dayNames: ("domingo" | "lunes" | "martes" | "miercoles" | "jueves" | "viernes" | "sabado")[] = [
+    "domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"
+  ]
+  const selectedDay = dayNames[selectedDate.getDay()]
+  
+  const businessHours = await getBusinessHours()
+  const daySchedule = businessHours[selectedDay]
+  
+  // Si el negocio está cerrado ese día, no hay slots disponibles
+  if (!daySchedule.isOpen) {
+    return []
+  }
+  
+  // Generar slots basados en los horarios del negocio
+  const allSlots = generateTimeSlotsForDay(daySchedule.openTime, daySchedule.closeTime)
 
   if (!isFirebaseConfigured || !db) {
     const bookedSlots = mockBookings
@@ -105,7 +122,7 @@ export async function getAvailableSlots(fecha: string, sucursal: string): Promis
   return allSlots.filter((slot) => !bookedSlots.includes(slot))
 }
 
-// Generate time slots from 10:00 to 20:00 in 30-minute intervals
+// Generate time slots from 10:00 to 20:00 in 30-minute intervals (fallback)
 function generateTimeSlots(): string[] {
   const slots: string[] = []
   for (let hour = 10; hour < 20; hour++) {
@@ -113,6 +130,29 @@ function generateTimeSlots(): string[] {
     slots.push(`${hour.toString().padStart(2, "0")}:30`)
   }
   slots.push("20:00")
+  return slots
+}
+
+// Generate time slots for a specific time range in 30-minute intervals
+function generateTimeSlotsForDay(startTime: string, endTime: string): string[] {
+  const slots: string[] = []
+  const [startHour, startMin] = startTime.split(":").map(Number)
+  const [endHour, endMin] = endTime.split(":").map(Number)
+  
+  let currentHour = startHour
+  let currentMin = startMin
+  
+  // Generar slots hasta la hora de cierre (incluyendo la hora de cierre)
+  while (currentHour < endHour || (currentHour === endHour && currentMin <= endMin)) {
+    slots.push(`${String(currentHour).padStart(2, "0")}:${String(currentMin).padStart(2, "0")}`)
+    
+    currentMin += 30
+    if (currentMin >= 60) {
+      currentMin = 0
+      currentHour++
+    }
+  }
+  
   return slots
 }
 

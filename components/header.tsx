@@ -7,7 +7,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import ThemeToggle from "./theme-toggle"
-import { BusinessStatus } from "./business-status"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -53,13 +52,8 @@ export function Header() {
               style={{ height: 'auto' }}
               priority
             />
-            <div className="flex flex-col gap-1">
-              <div className="text-xl md:text-2xl font-bold text-primary-foreground tracking-tight">
-                BLADES <span className="text-accent">BARBERS</span>
-              </div>
-              <div className="hidden md:block">
-                <BusinessStatus />
-              </div>
+            <div className="text-xl md:text-2xl font-bold text-primary-foreground tracking-tight">
+              BLADES <span className="text-accent">BARBERS</span>
             </div>
           </button>
 
@@ -146,11 +140,6 @@ export function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-4 animate-slide-down">
-            {/* Business Status en móvil */}
-            <div className="flex justify-center py-2">
-              <BusinessStatus />
-            </div>
-            
             <button
               onClick={() => scrollToSection("inicio")}
               className="text-primary-foreground hover:text-accent transition-colors text-sm font-medium text-left"

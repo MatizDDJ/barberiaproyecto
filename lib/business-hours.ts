@@ -182,27 +182,47 @@ export async function updateBusinessHours(businessHours: BusinessHours): Promise
 }
 
 /**
- * Formatea el horario para mostrar
+ * Formatea el horario para mostrar en el footer de forma compacta
  */
 export function formatBusinessHours(businessHours: BusinessHours): string {
-  const days = Object.entries(businessHours)
-  const openDays = days.filter(([_, schedule]) => schedule.isOpen)
+  const daysInSpanish: Record<string, string> = {
+    lunes: "Lunes",
+    martes: "Martes",
+    miercoles: "Miércoles",
+    jueves: "Jueves",
+    viernes: "Viernes",
+    sabado: "Sábado",
+    domingo: "Domingo",
+  }
 
-  if (openDays.length === 0) {
+  const dayOrder: (keyof BusinessHours)[] = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+  
+  // Agrupar días consecutivos con el mismo horario
+  const groups: Array<{ days: string[], schedule: DaySchedule }> = []
+  
+  for (const day of dayOrder) {
+    const schedule = businessHours[day]
+    
+    if (!schedule.isOpen) continue
+    
+    const lastGroup = groups[groups.length - 1]
+    
+    if (lastGroup && lastGroup.schedule.openTime === schedule.openTime && lastGroup.schedule.closeTime === schedule.closeTime) {
+      lastGroup.days.push(daysInSpanish[day])
+    } else {
+      groups.push({ days: [daysInSpanish[day]], schedule })
+    }
+  }
+
+  if (groups.length === 0) {
     return "Horarios no disponibles"
   }
 
-  const daysInSpanish: Record<string, string> = {
-    lunes: "Lun",
-    martes: "Mar",
-    miercoles: "Mié",
-    jueves: "Jue",
-    viernes: "Vie",
-    sabado: "Sáb",
-    domingo: "Dom",
-  }
-
-  return openDays
-    .map(([day, schedule]) => `${daysInSpanish[day]}: ${schedule.openTime}-${schedule.closeTime}`)
-    .join(" • ")
+  // Formatear cada grupo
+  return groups.map(group => {
+    const dayRange = group.days.length > 1 
+      ? `${group.days[0]} a ${group.days[group.days.length - 1]}`
+      : group.days[0]
+    return `${dayRange}: ${group.schedule.openTime} - ${group.schedule.closeTime}`
+  }).join("\n")
 }
