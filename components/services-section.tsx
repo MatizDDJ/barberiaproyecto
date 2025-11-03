@@ -42,8 +42,8 @@ export function ServicesSection() {
   const { ref: cardsRef, isInView: cardsInView } = useInView({ threshold: 0.1 })
 
   return (
-    <section id="servicios" className="py-12 md:py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section id="servicios" className="py-12 md:py-20 bg-background w-full overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div 
           ref={titleRef}
           className={`text-center mb-16 animate-on-scroll ${titleInView ? 'animate-fade-in' : ''}`}

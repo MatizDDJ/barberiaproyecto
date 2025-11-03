@@ -12,8 +12,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BusinessHoursEditor } from "@/components/business-hours-editor"
 import { toast } from "sonner"
-import { LogOut, Calendar, Filter } from "lucide-react"
+import { LogOut, Calendar, Filter, Clock } from "lucide-react"
 
 const SERVICE_LABELS: Record<string, string> = {
   "corte-completo": "Corte (incluye barba y cejas)",
@@ -120,8 +122,23 @@ export function AdminDashboard() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        {/* Tabs */}
+        <Tabs defaultValue="reservas" className="space-y-6">
+          <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 gap-2">
+            <TabsTrigger value="reservas" className="gap-2">
+              <Calendar className="h-4 w-4" />
+              Reservas
+            </TabsTrigger>
+            <TabsTrigger value="horarios" className="gap-2">
+              <Clock className="h-4 w-4" />
+              Horarios
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Reservas Tab */}
+          <TabsContent value="reservas" className="space-y-6">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Total Reservas</CardDescription>
@@ -293,6 +310,13 @@ export function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+          </TabsContent>
+
+          {/* Horarios Tab */}
+          <TabsContent value="horarios">
+            <BusinessHoursEditor />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   )

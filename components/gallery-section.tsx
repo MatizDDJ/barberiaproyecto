@@ -36,8 +36,8 @@ export function GallerySection() {
   const { ref: gridRef, isInView: gridInView } = useInView({ threshold: 0.1 })
 
   return (
-    <section id="galeria" className="py-20 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <section id="galeria" className="py-20 md:py-32 bg-muted/30 w-full overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div 
           ref={titleRef}
           className={`text-center mb-16 animate-on-scroll ${titleInView ? 'animate-fade-in' : ''}`}

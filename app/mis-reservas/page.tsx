@@ -117,8 +117,8 @@ export default function MisReservasPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-12 md:py-20">
+      <main className="min-h-screen bg-background pt-[72px]">
+        <div className="w-full max-w-7xl mx-auto px-4 py-12 md:py-20">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-12">

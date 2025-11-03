@@ -9,14 +9,16 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen w-full overflow-x-hidden">
       <Header />
-      <HeroSection />
-      <ServicesSection />
-      <GallerySection />
-      {/* <TestimonialsSection /> */}
-      <BookingSection />
-      <Footer />
+      <div className="pt-[72px]">
+        <HeroSection />
+        <ServicesSection />
+        <GallerySection />
+        {/* <TestimonialsSection /> */}
+        <BookingSection />
+        <Footer />
+      </div>
     </main>
   )
 }

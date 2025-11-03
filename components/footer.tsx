@@ -1,14 +1,48 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Instagram, Facebook, MessageCircle, MapPin, Clock } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function Footer() {
+  const router = useRouter()
+  const [clickCount, setClickCount] = useState(0)
+  const [clickTimer, setClickTimer] = useState<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    if (clickCount >= 5) {
+      // Acceso secreto desbloqueado
+      router.push("/admin")
+      setClickCount(0)
+    }
+  }, [clickCount, router])
+
+  const handleLogoClick = () => {
+    setClickCount(prev => prev + 1)
+    
+    // Reset después de 2 segundos
+    if (clickTimer) clearTimeout(clickTimer)
+    const timer = setTimeout(() => setClickCount(0), 2000)
+    setClickTimer(timer)
+  }
+
   return (
-    <footer id="contacto" className="bg-primary text-primary-foreground py-16">
-      <div className="container mx-auto px-4">
+    <footer id="contacto" className="bg-primary text-primary-foreground py-16 w-full overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold mb-4">
+            <h3 
+              className="text-2xl font-bold mb-4 cursor-pointer select-none transition-all hover:scale-105 active:scale-95"
+              onClick={handleLogoClick}
+              title="🤫"
+            >
               BLADES <span className="text-accent">BARBERS</span>
+              {clickCount > 0 && clickCount < 5 && (
+                <span className="ml-2 text-xs opacity-50 animate-pulse">
+                  {Array(clickCount).fill("🔒").join("")}
+                </span>
+              )}
             </h3>
             <p className="text-primary-foreground/80 leading-relaxed">
               Tu barbería de confianza en Colonia del Sacramento. Estilo, calidad y profesionalismo en cada corte.

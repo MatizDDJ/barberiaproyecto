@@ -164,8 +164,8 @@ export function BookingSection() {
   const { ref: cardRef, isInView: cardInView } = useInView({ threshold: 0.2 })
 
   return (
-    <section id="reservas" className="py-20 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <section id="reservas" className="py-20 md:py-32 bg-muted/30 w-full overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <Card 
             ref={cardRef}
@@ -214,12 +214,17 @@ export function BookingSection() {
                       name="telefono"
                       type="tel"
                       value={formData.telefono}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        // Solo permitir números, espacios, guiones y paréntesis
+                        const value = e.target.value.replace(/[^0-9\s\-\+\(\)]/g, '')
+                        setFormData({ ...formData, telefono: value })
+                      }}
                       placeholder="099 123 456"
                       required
                       disabled={loading}
-                      pattern="[0-9\s\-\+$$$$]+"
-                      title="Ingresá un número de teléfono válido"
+                      pattern="[0-9\s\-\+\(\)]+"
+                      title="Ingresá solo números"
+                      inputMode="numeric"
                     />
                   </div>
 

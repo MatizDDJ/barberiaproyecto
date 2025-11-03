@@ -236,6 +236,8 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Transiciones suaves para hover */
@@ -245,19 +247,29 @@ a, button {
 
 /* Fix crítico: Prevenir que Radix UI bloquee el scroll y mueva el contenido */
 body {
-  overflow-y: scroll !important;
+  overflow-x: hidden;
+  overflow-y: auto !important;
   padding-right: 0 !important;
+  margin: 0;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Asegurar que el body no cambie cuando se abren modales/selects */
 body[data-scroll-locked] {
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   padding-right: 0 !important;
 }
 
-/* Prevenir layout shift en el header y contenido principal */
-html {
-  overflow-y: scroll;
-  width: 100vw;
+/* Prevenir overflow horizontal en todos los elementos */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Container fix para prevenir overflow */
+.container {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
