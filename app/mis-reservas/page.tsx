@@ -18,7 +18,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { getClientBookings, cancelClientBooking, type ClientBookingWithId } from "@/lib/client-session"
-import { Calendar, Clock, Scissors, User, Phone, CalendarPlus, AlertCircle, X, MapPin } from "lucide-react"
+import { sendToWhatsApp } from "@/lib/whatsapp"
+import { Calendar, Clock, Scissors, User, Phone, CalendarPlus, AlertCircle, X, MapPin, MessageCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export default function MisReservasPage() {
@@ -218,6 +219,23 @@ export default function MisReservasPage() {
                                 <Button
                                   variant="outline"
                                   size="sm"
+                                  onClick={() => sendToWhatsApp({
+                                    nombre: booking.nombre,
+                                    telefono: booking.telefono,
+                                    servicio: booking.servicio,
+                                    sucursal: booking.sucursal,
+                                    fecha: booking.fecha,
+                                    hora: booking.hora
+                                  })}
+                                  className="whitespace-nowrap bg-[#25D366] hover:bg-[#20BA5A] text-white border-0"
+                                >
+                                  <MessageCircle className="w-4 h-4 mr-2" />
+                                  Contactar por WhatsApp
+                                </Button>
+                                
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   onClick={() => addToCalendar(booking)}
                                   className="whitespace-nowrap"
                                 >
@@ -322,6 +340,26 @@ export default function MisReservasPage() {
                                     <span>{getSucursalLabel(booking.sucursal)}</span>
                                   </div>
                                 </div>
+                              </div>
+
+                              {/* Botón de WhatsApp para historial */}
+                              <div className="flex flex-col gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => sendToWhatsApp({
+                                    nombre: booking.nombre,
+                                    telefono: booking.telefono,
+                                    servicio: booking.servicio,
+                                    sucursal: booking.sucursal,
+                                    fecha: booking.fecha,
+                                    hora: booking.hora
+                                  })}
+                                  className="whitespace-nowrap bg-[#25D366] hover:bg-[#20BA5A] text-white border-0"
+                                >
+                                  <MessageCircle className="w-4 h-4 mr-2" />
+                                  Contactar
+                                </Button>
                               </div>
                             </div>
                           </CardContent>
